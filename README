@@ -1,0 +1,60 @@
+-------------------------------------------------------------------------------
+README for @, also known as monkey-tail
+-------------------------------------------------------------------------------
+
+What?
+-----
+
+@ is a swiss army knife for the *Nix user, and is self-contained and portable.
+
+
+Why?
+----
+
+Well, I feel that it's nice to have a collection of simple commands in a
+separate utility, rather than "polluting" the shell namespace.
+
+You can hang @ on your belt, along with your shell, editor and your C compiler.
+
+
+How?
+----
+
+Copy @ into your usual directory for scripts, etc
+
+Then, simply run:
+
+	@ list-commands
+
+For example, to show disk usage of the current directory:
+
+ 	@ disk-usage
+
+Or, find the disk hogs in your downloads directory:
+
+	@ disk-hogs ~/Downloads
+
+
+Modify?
+-------
+
+Of course! @ is licenced under the GPLv2, meaning you can customise it for your
+own needs.
+
+Each command in @ is a bash function, prefixed with _ (underscore). For example:
+
+	_my-command () {
+	 echo "Hello there!"
+	}
+
+Can be accessed by:
+
+	@ my-command
+
+@ provides a few built in functions, and eventually there will be more.
+
+
+By Who?
+-------
+
+@ is written by Lucas Martin-King

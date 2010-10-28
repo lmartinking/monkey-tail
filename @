@@ -1,0 +1,95 @@
+#!/bin/bash
+# @, aka monkey-tail
+# Licenced under the GNU GPLv2
+
+###########################################################################
+# Globals
+
+SELF=$( basename $0 )
+SELF_LONG=$0
+SELF_VERSION="0.01"
+SELF_AUTHOR="Lucas Martin-King"
+
+###########################################################################
+# Subcommands
+
+_start () {
+ [ -z "$1" ] && return
+ ( nohup $* > /dev/null 2>&1 & ) > /dev/null 2>&1
+}
+
+_run-once () {
+ pidof $1 || _start $*
+}
+
+_disk-usage () {
+ local dir="."
+ [ ! -z "$1" ] && dir=$1
+ du -chs $1 | tail -n 1
+}
+
+_disk-hogs () {
+ local dir="."
+ [ ! -z "$1" ] && dir=$1
+ du -sk $dir/* | sort -nr | head -n 10 | cut -f 2 |
+ xargs -i% du --max-depth=0 -h "%"
+}
+
+_disk-free () {
+ local dir="."
+ [ ! -z "$1" ] && dir=$1
+ df -h $dir
+}
+
+_mem-free () {
+ free -m | head -n 3 | tail -n 1 | awk '{ print $4"M" }'
+}
+
+_mem-used () {
+ free -m | head -n 3 | tail -n 1 | awk '{ print $3"M" }'
+}
+
+_mem-total () {
+ free -m | grep "Mem:" | awk '{ print $2"M" }'
+}
+
+###########################################################################
+# Helper commands
+
+_help () {
+ echo "Usage: $SELF <subcommand>"
+ exit 1
+}
+
+_version () {
+ echo "$SELF, version $SELF_VERSION, by $SELF_AUTHOR"
+ exit 0
+}
+
+_list-commands () {
+ declare -F | cut -d ' ' -f 3 | grep "^_.*" | sed 's/^_//' | column
+}
+
+###########################################################################
+# Helper functions
+
+catch_all () {
+ case "$1" in
+  '-v' | '-version' | '--version') _version ;;
+  '-h' | '-help' | '--help') _help ;;
+ esac
+
+ [ ! -z "$1" ] && echo "Command '$1' does not exist"
+
+ _help
+}
+
+fn_exists () {
+ type $1 2> /dev/null | grep -q 'function'
+}
+
+###########################################################################
+# Program
+
+fn_exists _$1 || catch_all $1
+CMD=$1 ; shift ; _$CMD $*
