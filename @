@@ -10,6 +10,9 @@ SELF_LONG=$0
 SELF_VERSION="0.01"
 SELF_AUTHOR="Lucas Martin-King"
 
+###########################################################################
+# Embedded help
+
 # |start|<program>|start a program detached from a terminal|
 # |run-once|<program>|only start a program if it isn't running|
 # |disk-usage|<path>|show disk usage|
