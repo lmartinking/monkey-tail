@@ -70,6 +70,11 @@ _list-commands () {
  declare -F | cut -d ' ' -f 3 | grep "^_.*" | sed 's/^_//' | column
 }
 
+_help-on () {
+ local cmd=$1
+ grep "^# |$cmd|" $SELF_LONG | sed -e 's/# |//' -e 's/|$//' -e 's/|/\t/g'
+}
+
 ###########################################################################
 # Helper functions
 
