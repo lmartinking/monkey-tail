@@ -128,8 +128,16 @@ fn_exists () {
  type $1 2> /dev/null | grep -q 'function'
 }
 
-is_numeric() {
+is_numeric () {
  echo "$@" | grep -q -v "[^0-9]"
+}
+
+die () {
+ echo "error: $1" ; exit 1
+}
+
+warn () {
+ echo "warning: $1"
 }
 
 ###########################################################################
