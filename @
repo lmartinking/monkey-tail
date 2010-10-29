@@ -53,6 +53,22 @@ _mem-total () {
  free -m | grep "Mem:" | awk '{ print $2"M" }'
 }
 
+_proc () {
+ ps -H -o uname,tty=TTY,pid,pcpu,pmem,rss,comm -C $1
+}
+
+_proc-tree () {
+ for pid in $(pidof $1) ; do
+  pstree -l $pid
+ done
+}
+
+_proc-files () {
+ local opt="-c $1"
+ is_numeric $1 && opt="-p $1"
+ lsof -f $opt | grep -v "/lib\|/usr/lib\|/usr/local/lib\| socket\| pipe\| anon_inode"
+}
+
 ###########################################################################
 # Helper commands
 
