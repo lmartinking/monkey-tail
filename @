@@ -41,9 +41,13 @@ _disk-usage () {
 }
 
 _disk-hogs () {
- local dir="."
- [ ! -z "$1" ] && dir=$1
- du -sk $dir/* | sort -nr | head -n 10 | cut -f 2 |
+ IFS="$(printf '\n\t')"
+ if [[ ! -z "$1" ]] ; then
+  [[ ! -d $1 ]] && exit 1
+  [[ -d $1 ]] && cd $1
+ fi 
+ dirs="$( ls -A . )"
+ du -sk $dirs | sort -nr | head -n 10 | cut -f 2 |
  xargs -i% du --max-depth=0 -h "%"
 }
 
