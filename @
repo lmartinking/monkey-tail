@@ -10,6 +10,18 @@ SELF_LONG=$0
 SELF_VERSION="0.01"
 SELF_AUTHOR="Lucas Martin-King"
 
+# |start|<program>|start a program detached from a terminal|
+# |run-once|<program>|only start a program if it isn't running|
+# |disk-usage|<path>|show disk usage|
+# |disk-hogs|<path>|show top 10 disk hogs|
+# |disk-free|<path>|show free space|
+# |mem-used||show used memory|
+# |mem-free||show free memory|
+# |mem-total||show total memory|
+# |proc|<name or pid>|show process info|
+# |proc-tree|<name or pid>|show process tree|
+# |proc-files|<name or pid>|show process files|
+
 ###########################################################################
 # Subcommands
 
