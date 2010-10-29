@@ -36,7 +36,7 @@ _run-once () {
 
 _disk-usage () {
  local dir="."
- [ ! -z "$1" ] && dir=$1
+ [[ ! -z "$1" ]] && dir=$1
  du -chs $1 | tail -n 1
 }
 
@@ -49,7 +49,7 @@ _disk-hogs () {
 
 _disk-free () {
  local dir="."
- [ ! -z "$1" ] && dir=$1
+ [[ ! -z "$1" ]] && dir=$1
  df -h $dir
 }
 
@@ -112,7 +112,7 @@ catch_all () {
   '-h' | '-help' | '--help') _help ;;
  esac
 
- [ ! -z "$1" ] && echo "Command '$1' does not exist"
+ [[ ! -z "$1" ]] && echo "Command '$1' does not exist"
 
  _help
 }
