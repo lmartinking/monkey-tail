@@ -93,6 +93,10 @@ fn_exists () {
  type $1 2> /dev/null | grep -q 'function'
 }
 
+function is_numeric() {
+ echo "$@" | grep -q -v "[^0-9]"
+}
+
 ###########################################################################
 # Program
 
