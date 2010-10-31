@@ -192,8 +192,12 @@ warn () {
  echo "warning: $1"
 }
 
+main () {
+ fn_exists _$1 || catch_all $1
+ CMD=$1 ; shift ; _$CMD $*
+}
+
 ###########################################################################
 # Program
 
-fn_exists _$1 || catch_all $1
-CMD=$1 ; shift ; _$CMD $*
+main $*
