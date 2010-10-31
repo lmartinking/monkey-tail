@@ -26,6 +26,10 @@ SELF_AUTHOR="Lucas Martin-King"
 # |proc-files|<name or pid>|show process files|
 
 ###########################################################################
+# Embedded settings
+
+
+###########################################################################
 # Subcommands
 
 _start () {
@@ -110,6 +114,33 @@ _help-on () {
  grep "^# |$cmd|" $SELF_LONG | sed -e 's/# |//' -e 's/|$//' -e 's/|/\t/g'
 }
 
+_get-variable () {
+ local var=$1
+ grep "^# :$var=.*:$" $SELF_LONG | sed -e 's/# ://' -e 's/:$//' | cut -d '=' -f 2 | head -n 1
+}
+
+_set-variable () {
+ local var val oldval file
+ [[ ! -w $SELF_LONG ]] && die "$SELF is read only"
+ var=$1
+ val=$2
+ var_exists $var || die "$var doesn't exist"
+ oldval=$( _get-variable $var )
+
+ [[ -z "$val" ]] && warn "new value is empty"
+
+ echo "var: $var old: $oldval new: $val"
+
+ file=$( readlink $SELF_LONG )
+ [[ -z "$file" ]] && file=$SELF_LONG
+
+ sed -i.bak -e "s/# :$var=$oldval:/# :$var=$val:/" $file
+}
+
+_list-variables () {
+ grep "^# :.*=.*:$" $SELF_LONG | sed -e 's/# ://' -e 's/:$//' | uniq
+}
+
 ###########################################################################
 # Helper functions
 
@@ -130,6 +161,11 @@ fn_exists () {
 
 is_numeric () {
  echo "$@" | grep -q -v "[^0-9]"
+}
+
+var_exists () {
+ local var=$1
+ grep -q "^# :$var=.*:$" $SELF_LONG
 }
 
 die () {
