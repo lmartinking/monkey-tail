@@ -147,6 +147,16 @@ _list-variables () {
  grep "^# :.*=.*:$" $SELF_LONG | sed -e 's/# ://' -e 's/:$//' | uniq
 }
 
+_config () {
+ if [[ -z "$1" ]] ; then
+  _list-variables
+ fi
+ if [[ ! -z "$1" ]] && [[ ! -z "$2" ]] ; then
+  _set-variable ${1} ${2}
+ fi
+  _get-variable ${1}
+}
+
 ###########################################################################
 # Helper functions
 
