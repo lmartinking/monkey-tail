@@ -28,6 +28,7 @@ SELF_AUTHOR="Lucas Martin-King"
 ###########################################################################
 # Embedded settings
 
+# :proc.fields=uname,tty=TTY,pid,pcpu,pmem,rss,comm:
 
 ###########################################################################
 # Subcommands
@@ -78,8 +79,9 @@ _mem-total () {
 
 _proc () {
  local opt="-C $1"
+ local fields=$( _get-variable proc.fields )
  is_numeric $1 && opt="-p $1"
- ps -H -o uname,tty=TTY,pid,pcpu,pmem,rss,comm $opt
+ ps -H -o $fields $opt
 }
 
 _proc-tree () {
