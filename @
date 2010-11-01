@@ -30,6 +30,7 @@ SELF_AUTHOR="Lucas Martin-King"
 # Embedded settings
 
 # :proc.fields=uname,tty=TTY,pid,pcpu,pmem,rss,comm:
+# :disk.hogs.number=10:
 
 ###########################################################################
 # Subcommands
@@ -56,7 +57,7 @@ _disk-hogs () {
   [[ -d $1 ]] && cd $1
  fi 
  dirs="$( ls -A . )"
- du -sk $dirs | sort -nr | head -n 10 | cut -f 2 |
+ du -sk $dirs | sort -nr | head -n $( _get-variable disk.hogs.number ) | cut -f 2 |
  xargs -i% du --max-depth=0 -h "%"
 }
 
