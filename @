@@ -139,10 +139,7 @@ _set-variable () {
 
  echo "var: $var old: $oldval new: $val"
 
- file=$( readlink $SELF_LONG )
- [[ -z "$file" ]] && file=$SELF_LONG
-
- sed -i.bak -e "s/# :$var=$oldval:/# :$var=$val:/" $file
+ sed -i.bak -e "s/# :$var=$oldval:/# :$var=$val:/" $SELF_REAL
 }
 
 _list-variables () {
