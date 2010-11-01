@@ -192,6 +192,9 @@ warn () {
 }
 
 main () {
+ SELF_REAL=$( readlink $SELF_LONG )
+ [[ -z "$SELF_REAL" ]] && SELF_REAL=$SELF_LONG
+
  fn_exists _$1 || catch_all $1
  CMD=$1 ; shift ; _$CMD $*
 }
