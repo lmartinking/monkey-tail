@@ -15,6 +15,7 @@ SELF_AUTHOR="Lucas Martin-King"
 
 # |start|<program>|start a program detached from a terminal|
 # |run-once|<program>|only start a program if it isn't running|
+# |config|[<variable> [<new value>]]|manage embedded settings|
 # |disk-usage|<path>|show disk usage|
 # |disk-hogs|<path>|show top 10 disk hogs|
 # |disk-free|<path>|show free space|
