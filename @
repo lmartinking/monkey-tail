@@ -68,15 +68,15 @@ _disk-free () {
 }
 
 _mem-free () {
- free -m | head -n 3 | tail -n 1 | awk '{ print $4"M" }'
+ free -m | sed -n 3p | awk '{ print $4"M" }'
 }
 
 _mem-used () {
- free -m | head -n 3 | tail -n 1 | awk '{ print $3"M" }'
+ free -m | sed -n 3p | awk '{ print $3"M" }'
 }
 
 _mem-total () {
- free -m | grep "Mem:" | awk '{ print $2"M" }'
+ free -m | awk '/Mem:/ { print $2"M" }'
 }
 
 _proc () {
