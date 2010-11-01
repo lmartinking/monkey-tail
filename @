@@ -199,6 +199,49 @@ main () {
  CMD=$1 ; shift ; _$CMD $*
 }
 
+ext_begins () {
+ local ln=$( grep -n "# {begin:$1:.*}" $SELF_LONG | cut -d ':' -f 1 )
+ [[ -z "$ln" ]] && exit 1
+ expr $ln + 1
+}
+
+ext_ends () {
+ local ln=$( grep -n "# {end:$1}" $SELF_LONG | cut -d ':' -f 1 )
+ [[ -z "$ln" ]] && exit 1
+ expr $ln - 1
+}
+
+ext_origin () {
+ sed -n 's/# {begin:'${1}':\(.*\)}/\1/p' $SELF_LONG
+}
+
+ext_code () {
+ local start end
+ start=$( ext_begins $1 )
+ end=$( ext_ends $1 )
+ [[ -z "$start" || -z "$end" ]] && die "Cannot find start or end of $1"
+ [[ $end -lt $start ]] && return 1
+ sed -n "${start},${end}p" $SELF_LONG
+}
+
+ext_insert () {
+ local file start
+ file=$1
+ start=$2
+ sed -i.bak -e "${start} r ${file}" $SELF_REAL
+}
+
+ext_header () {
+ echo "# {begin:$1:$2}"
+}
+
+ext_footer () {
+ echo "# {end:$1}"
+}
+
+###########################################################################
+# External commands
+
 ###########################################################################
 # Program
 
