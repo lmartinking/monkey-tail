@@ -15,7 +15,15 @@ SELF_AUTHOR="Lucas Martin-King"
 
 # |start|<program>|start a program detached from a terminal|
 # |run-once|<program>|only start a program if it isn't running|
+
 # |config|[<variable> [<new value>]]|manage embedded settings|
+
+# |external-update|<external> [<origin>]|update an external's code|
+# |external-remove|<external>|remove external's code, keeping header|
+# |external-append|<external> <file>|append code to external|
+# |external-code|<external>|output external's code, without headers|
+# |external-extract|<external>|output external's code, including headers|
+
 # |disk-usage|<path>|show disk usage|
 # |disk-hogs|<path>|show top 10 disk hogs|
 # |disk-free|<path>|show free space|
@@ -155,6 +163,114 @@ _config () {
  fi
   _get-variable ${1}
 }
+
+_external () {
+ local begins ends origin loc
+ origin=$( ext_origin $1 )
+ begins=$( ext_begins $1 )
+ ends=$( ext_ends $1 )
+ [[ "$begins" == "" || "$ends" == "" ]] && return 1
+ loc=":"
+ [[ $begins -gt $ends ]] && begins=$ends && loc="|"
+ echo "${begins}${loc}${ends} ${origin}"
+}
+
+_external-code () {
+ ext_code $1
+}
+
+_external-extract () {
+ ext_header $1 $( ext_origin $1 )
+ ext_code $1
+ ext_footer $1
+}
+
+_external-remove () {
+ local starts ends file
+
+ starts=$( ext_begins $1 )
+ ends=$( ext_ends $1 )
+
+ [[ -z "$starts" || -z "$ends" ]] && die "Cannot find start or end of $1"
+ is_numeric $starts || die "something is not right"
+ is_numeric $ends || die "something is not right"
+ [[ $ends -lt $starts ]] && return 1
+
+ echo "Removing code of '$1' from $SELF_REAL"
+ sed -i.bak -e "${starts},${ends}d" $SELF_REAL
+}
+
+_external-append () {
+ local line=$( ext_ends $1 )
+ local file=$2
+ echo "Appending code from $file to $SELF_REAL"
+ [[ -f "$file" && "$line" != "" ]] && ext_insert "$file" $line
+}
+
+_external-add () {
+ local origin name tmpfile offset
+ origin=$1
+ name=$( basename $origin )
+
+ echo $name
+
+ ext_begins $name > /dev/null && die "An external already exists by that name"
+ ext_ends $name > /dev/null && die "An external already exists by that name"
+
+ echo "..."
+
+ tmpfile=/tmp/$SELF.$$.ext.add.tmp
+
+ echo $tmpfile
+
+ echo > $tmpfile
+ ext_header $name $origin >> $tmpfile
+ ext_footer $name >> $tmpfile
+ offset=$( grep -n "^# {end:.*}$" $SELF_LONG | tail -n 1 | cut -d ":" -f 1 )
+ if [[ -z "$offset" ]] ; then
+  offset=$( wc -l $SELF_LONG | cut -d ' ' -f 1 )
+  let "offset = $offset - 5"
+ fi
+ ext_insert $tmpfile $offset && _external-update $name
+}
+
+_external-update () {
+ local ext=$1
+ local origin
+
+ if ext_begins $ext > /dev/null && ext_ends $ext > /dev/null ; then
+  origin=$( ext_origin $ext )
+  [[ ! -z "$2" ]] && origin=$2
+  [[ -z "$origin" ]] && die "Origin not set"
+
+  echo "Using $origin as origin"
+
+  local ofile
+
+  if echo $origin | grep -q '\(http\(s\?\)\|ftp\)://' ; then
+   ofile=/tmp/$SELF.$$.ext.tmp
+   echo "Fetching from $origin, saving to $ofile"
+   wget --no-verbose -nc --progress=dot -O $ofile $origin || die "Could not fetch properly"
+  else
+   ofile=$origin
+  fi
+
+  if [[ -f "$ofile" ]] ; then
+   sed '1p' $ofile | grep -q "^# @$" || warn "$ofile doesn't have '# @' on the first line, is it an external?"
+  else
+   die "Cannot load $origin"
+  fi
+
+  local backup=/tmp/$SELF.$$.tmp
+  cp $SELF_REAL $backup && echo "Backup of $SELF_REAL is at $backup"
+
+  _external-remove $ext
+  _external-append $ext $ofile
+ else
+  die "Cannot update '$ext' because I can't find it"
+ fi
+}
+
 
 ###########################################################################
 # Helper functions
