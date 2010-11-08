@@ -307,6 +307,16 @@ warn () {
  echo "warning: $1" 1>&2
 }
 
+file_type () {
+  [[ ! -f "$1" ]] && return 1
+  file -b "$1" | cut -d "," -f 1
+}
+
+file_mime () {
+  [[ ! -f "$1" ]] && return 1
+  file -b -i "$1" | cut -d ";" -f 1
+}
+
 main () {
  SELF_REAL=$( readlink $SELF_LONG )
  [[ -z "$SELF_REAL" ]] && SELF_REAL=$SELF_LONG
