@@ -18,6 +18,7 @@ SELF_AUTHOR="Lucas Martin-King"
 
 # |config|[<variable> [<new value>]]|manage embedded settings|
 
+# |external-add|<origin>|add an external from origin|
 # |external-update|<external> [<origin>]|update an external's code|
 # |external-remove|<external>|remove external's code, keeping header|
 # |external-append|<external> <file>|append code to external|
