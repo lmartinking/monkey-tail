@@ -312,18 +312,18 @@ main () {
  [[ -z "$SELF_REAL" ]] && SELF_REAL=$SELF_LONG
 
  fn_exists _$1 || catch_all $1
- CMD=$1 ; shift ; _$CMD $*
+ CMD=$1 ; shift ; _$CMD "$@"
 }
 
 ext_begins () {
  local ln=$( grep -n "# {begin:$1:.*}" $SELF_LONG | cut -d ':' -f 1 )
- [[ -z "$ln" ]] && exit 1
+ [[ -z "$ln" ]] && return 1
  expr $ln + 1
 }
 
 ext_ends () {
  local ln=$( grep -n "# {end:$1}" $SELF_LONG | cut -d ':' -f 1 )
- [[ -z "$ln" ]] && exit 1
+ [[ -z "$ln" ]] && return 1
  expr $ln - 1
 }
 
@@ -361,4 +361,4 @@ ext_footer () {
 ###########################################################################
 # Program
 
-main $*
+main "$@"
