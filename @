@@ -17,6 +17,9 @@ SELF_AUTHOR="Lucas Martin-King"
 # |run-once|<program>|only start a program if it isn't running|
 
 # |config|[<variable> [<new value>]]|manage embedded settings|
+# |list-variables||list all embedded settings|
+# |set-variable|<variable> <new value>|set variable to new value|
+# |get-variable|<variable>|get variable value|
 
 # |external-add|<origin>|add an external from origin|
 # |external-update|<external> [<origin>]|update an external's code|
@@ -112,6 +115,8 @@ _proc-files () {
 
 _help () {
  echo "Usage: $SELF <subcommand>"
+ echo "   or: $SELF list-commands"
+ echo "   or: $SELF help-on <subcommand>"
  exit 1
 }
 
