@@ -48,8 +48,8 @@ SELF_AUTHOR="Lucas Martin-King"
 # Subcommands
 
 _start () {
- [ -z "$1" ] && return
  require nohup
+ [[ -z "$1" ]] && return
  ( nohup $* > /dev/null 2>&1 & ) > /dev/null 2>&1
 }
 
@@ -104,6 +104,7 @@ _proc () {
  local opt="-C $1"
  local fields=$( _get-variable proc.fields )
  is_numeric $1 && opt="-p $1"
+ [[ -z "$1" ]] && opt="-U $USER"
  ps -H -o $fields $opt
 }
 
