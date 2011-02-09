@@ -323,6 +323,14 @@ file_mime () {
   file -b -i "$1" | cut -d ";" -f 1
 }
 
+require () {
+ for cmd in $@ ; do
+  if [[ ! "$( command -v "$cmd" )" ]] ; then
+   die "require $cmd"
+  fi
+ done
+}
+
 main () {
  SELF_REAL=$( readlink $SELF_LONG )
  [[ -z "$SELF_REAL" ]] && SELF_REAL=$SELF_LONG
