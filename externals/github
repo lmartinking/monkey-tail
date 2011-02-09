@@ -1,0 +1,40 @@
+# @
+# An external to make github setups easier
+
+# |github-setup|<repo dir>|set up git repo for github|
+# |github-remote|<repo dir> <user> <repo>|set up git repo with github as remote|
+
+# :git.user.name=--------:
+# :git.user.email=----@------:
+# :git.github.uri=git@github.com:
+# :git.github.username=--------:
+# :git.github.token=--------------------------------:
+
+_github-setup () {
+ require git
+ [[ ! -z "$1" ]] && cd $1
+ for var in github.username github.token user.name user.email ; do
+  echo git config $var $( _get-variable git.$var )
+ done
+}
+
+_github-remote () {
+ require git
+ echo "$1 $2 $3"
+ [[ -d "$1" ]] && cd "$1" && shift
+ echo git remote add origin $( _get-variable git.github.uri ):$1:$2.git
+}
+
+_git-enable-color () {
+ require git
+ local flag
+ if [[ "$1" == "global" ]] ; then
+  flag="--global"
+ else
+  [[ -d "$1" ]] && cd $1
+  [[ ! -d "./.git" ]] && die "'$( pwd )' is not a git repository"
+ fi
+ for type in diff status branch ; do
+  git config $flag "color.${type}" auto
+ done
+}
