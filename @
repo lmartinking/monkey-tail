@@ -49,20 +49,24 @@ SELF_AUTHOR="Lucas Martin-King"
 
 _start () {
  [ -z "$1" ] && return
+ require nohup
  ( nohup $* > /dev/null 2>&1 & ) > /dev/null 2>&1
 }
 
 _run-once () {
+ require pidof
  pidof $1 || _start $*
 }
 
 _disk-usage () {
+ require du
  local dir="."
  [[ ! -z "$1" ]] && dir=$1
  du -chs $1 | tail -n 1
 }
 
 _disk-hogs () {
+ require du sort head cut printf xargs
  IFS="$(printf '\n\t')"
  if [[ ! -z "$1" ]] ; then
   [[ ! -d $1 ]] && exit 1
@@ -74,24 +78,29 @@ _disk-hogs () {
 }
 
 _disk-free () {
+ require df
  local dir="."
  [[ ! -z "$1" ]] && dir=$1
  df -h $dir
 }
 
 _mem-free () {
+ require free
  free -m | sed -n 3p | awk '{ print $4"M" }'
 }
 
 _mem-used () {
+ require free
  free -m | sed -n 3p | awk '{ print $3"M" }'
 }
 
 _mem-total () {
+ require free
  free -m | awk '/Mem:/ { print $2"M" }'
 }
 
 _proc () {
+ require ps
  local opt="-C $1"
  local fields=$( _get-variable proc.fields )
  is_numeric $1 && opt="-p $1"
@@ -99,12 +108,14 @@ _proc () {
 }
 
 _proc-tree () {
+ require pstree
  for pid in $(pidof $1) ; do
   pstree -l $pid
  done
 }
 
 _proc-files () {
+ require lsof
  local opt="-c $1"
  is_numeric $1 && opt="-p $1"
  lsof -f $opt | grep -v "/lib\|/usr/lib\|/usr/local/lib\| socket\| pipe\| anon_inode"
@@ -332,6 +343,8 @@ require () {
 }
 
 main () {
+ require sed awk grep cut head tail readlink file
+
  SELF_REAL=$( readlink $SELF_LONG )
  [[ -z "$SELF_REAL" ]] && SELF_REAL=$SELF_LONG
 
