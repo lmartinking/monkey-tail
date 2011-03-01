@@ -28,6 +28,9 @@ SELF_AUTHOR="Lucas Martin-King"
 # |external-code|<external>|output external's code, without headers|
 # |external-extract|<external>|output external's code, including headers|
 
+# |list-requirements||list required system commands|
+# |check-requirements||check if system has required commands|
+
 # |disk-usage|<path>|show disk usage|
 # |disk-hogs|<path>|show top 10 disk hogs|
 # |disk-free|<path>|show free space|
