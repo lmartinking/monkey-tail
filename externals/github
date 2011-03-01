@@ -3,6 +3,7 @@
 
 # |github-setup|<repo dir>|set up git repo for github|
 # |github-remote|<repo dir> <user> <repo>|set up git repo with github as remote|
+# |git-enable-color|<repo dir>|enable color git for <repo dir> or global for globally|
 
 # :git.user.name=--------:
 # :git.user.email=----@------:
