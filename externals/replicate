@@ -1,4 +1,6 @@
 # @
+# An external to copy @ to a remote host via SSH
+
 # |replicate|<ssh login>|replicate @ to remote host|
 # :replicate.path=~/bin:
 _replicate () {
