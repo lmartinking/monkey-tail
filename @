@@ -289,6 +289,19 @@ _external-update () {
  fi
 }
 
+_list-requirements () {
+  require uniq
+  local reqs=$(grep '\srequire \(\w*\)\(\(\s*\)\(\w*\)\)*' $SELF | sed -e 's/require//g' -e 's/ /\n/g' | sort | uniq)
+  echo $reqs
+}
+
+_check-requirements () {
+  local reqs=$(_list-requirements)
+
+  for req in ${reqs} ; do
+    eval "require $req"
+  done
+}
 
 ###########################################################################
 # Helper functions
