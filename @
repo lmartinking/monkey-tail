@@ -365,8 +365,16 @@ main () {
  SELF_REAL=$( readlink $SELF_LONG )
  [[ -z "$SELF_REAL" ]] && SELF_REAL=$SELF_LONG
 
- fn_exists _$1 || catch_all $1
- CMD=$1 ; shift ; _$CMD "$@"
+ if fn_exists _$(basename $0) ; then
+   CMD=$(basename $0)
+ elif fn_exists _$1 ; then
+   CMD=$1
+   shift
+ else
+   catch_all $1
+ fi
+
+ _$CMD "$@"
 }
 
 ext_begins () {
