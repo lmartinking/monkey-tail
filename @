@@ -182,7 +182,7 @@ _config () {
  if [[ ! -z "$1" ]] && [[ ! -z "$2" ]] ; then
   _set-variable ${1} ${2}
  fi
-  _get-variable ${1}
+ _get-variable ${1}
 }
 
 _external () {
@@ -293,17 +293,17 @@ _external-update () {
 }
 
 _list-requirements () {
-  require uniq
-  local reqs=$(grep '\srequire \(\w*\)\(\(\s*\)\(\w*\)\)*' $SELF | sed -e 's/require//g' -e 's/ /\n/g' | sort | uniq)
-  echo $reqs
+ require uniq
+ local reqs=$(grep '\srequire \(\w*\)\(\(\s*\)\(\w*\)\)*' $SELF | sed -e 's/require//g' -e 's/ /\n/g' | sort | uniq)
+ echo $reqs
 }
 
 _check-requirements () {
-  local reqs=$(_list-requirements)
+ local reqs=$(_list-requirements)
 
-  for req in ${reqs} ; do
-    eval "require $req"
-  done
+ for req in ${reqs} ; do
+  eval "require $req"
+ done
 }
 
 ###########################################################################
@@ -342,13 +342,13 @@ warn () {
 }
 
 file_type () {
-  [[ ! -f "$1" ]] && return 1
-  file -b "$1" | cut -d "," -f 1
+ [[ ! -f "$1" ]] && return 1
+ file -b "$1" | cut -d "," -f 1
 }
 
 file_mime () {
-  [[ ! -f "$1" ]] && return 1
-  file -b -i "$1" | cut -d ";" -f 1
+ [[ ! -f "$1" ]] && return 1
+ file -b -i "$1" | cut -d ";" -f 1
 }
 
 require () {
@@ -366,12 +366,12 @@ main () {
  [[ -z "$SELF_REAL" ]] && SELF_REAL=$SELF_LONG
 
  if fn_exists _$(basename $0) ; then
-   CMD=$(basename $0)
+  CMD=$(basename $0)
  elif fn_exists _$1 ; then
-   CMD=$1
-   shift
+  CMD=$1
+  shift
  else
-   catch_all $1
+  catch_all $1
  fi
 
  _$CMD "$@"
