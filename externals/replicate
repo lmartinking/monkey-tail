@@ -4,10 +4,10 @@
 # |replicate|<ssh login>|replicate @ to remote host|
 # :replicate.path=~/bin:
 _replicate () {
-  require ssh scp
-  local ssh_login="$1"
-  local install_dir=$( _get-variable replicate.path )
-  echo "Replicating $SELF_LONG to $ssh_login:$install_dir"
-  ssh $ssh_login "/bin/bash -l -c '[[ ! -d $install_dir ]] && mkdir $install_dir'"
-  scp -C $SELF_LONG $ssh_login:$install_dir || die "Could not replicate"
+ require ssh scp
+ local ssh_login="$1"
+ local install_dir=$( _get-variable replicate.path )
+ echo "Replicating $SELF_LONG to $ssh_login:$install_dir"
+ ssh $ssh_login "/bin/bash -l -c '[[ ! -d $install_dir ]] && mkdir $install_dir'"
+ scp -C $SELF_LONG $ssh_login:$install_dir || die "Could not replicate"
 }
