@@ -1,0 +1,87 @@
+# @
+# Easily extract files from a number of formats
+
+_extract () {
+ local file ftype fname
+
+ for file in "$@" ; do
+  [ ! -f "$file" ] && warn "$file is not a file" && continue
+
+  ftype=$( file_mime "$file" )
+  fname="${file%%.*}"
+
+  case "$ftype" in
+   application/zip)             require unzip && unzip "$file" ;;
+   application/x-bzip2)         _extract-bz2 "$file" ;;
+   application/x-gzip)          _extract-gz "$file" ;;
+   application/rar)             require unrar && unrar x "$file" ;;
+   application/x-7z-compressed) require 7z && 7z x "$file" ;;
+   application/octet-stream)
+    local ft="$( file_type "$file" )"
+    case "$ft" in
+     "Debian binary package"*)  _extract-deb "$file" ;;
+     *"cpio archive"*)          _extract-cpio "$file" ;;
+    esac
+    ;;
+   *) warn "don't know how to extract '$file' ($ftype)" ;;
+  esac
+ done
+}
+
+_extract-cpio () {
+ require cpio
+ local file odir bname
+ file="$( readlink -m $1 )"
+ bname=$( basename "$file" )
+ odir=$bname
+
+ echo $file
+
+ [[ ! -f "$file" ]] && return 1
+ [[ -f $odir ]] && odir="${bname}.tmp"
+ [[ ! -d "$odir" ]] && mkdir "$odir" && cd "$odir" && cpio -i < "$file"
+}
+
+_extract-deb () {
+ require ar tar
+ local file fname bname
+ file=$1
+ bname=$( basename "$file" )
+ fname=${bname%.*}
+
+ [ ! -f "$file" ] && return 1
+
+ mkdir "$fname"
+
+ for part in control data ; do
+  mkdir "$fname/$part"
+  ar p "$file" "${part}.tar.gz" | tar xzv -C "$fname/$part"
+ done
+}
+
+_extract-bz2 () {
+ require bzip2 tar
+ local file fname
+ file=$1
+ fname=${file%.*}
+
+ [ ! -f "$file" ] && return 1
+ 
+ case "$file" in
+  *.tar.bz2|*.tbz2) tar -xjvf "$file" ;; 
+  *) bzip2 -dc "$file" > $fname && _extract "$fname" ;;
+ esac
+}
+
+_extract-gz () {
+ require tar gzip
+ local file bname fname tmpfile
+ file=$1
+ bname=$( basename "$file" )
+ fname=${bname%.*}
+
+ case "$file" in
+  *.tar.gz|*.tgz) tar -xzvf "$file" ;; 
+  *) [[ ! -f "$fname" ]] && gzip -S "" -dc "$file" > "$fname" && _extract "$fname" ;;
+ esac
+}
