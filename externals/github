@@ -3,6 +3,7 @@
 
 # |github-setup|<repo dir>|set up git repo for github|
 # |github-remote|<repo dir> <user> <repo>|set up git repo with github as remote|
+# |github-clone|<git user>/<repo>|clone user's repository from github|
 # |git-enable-color|<repo dir>|enable color git for <repo dir> or global for globally|
 
 # :git.user.name=--------:
@@ -27,6 +28,12 @@ _github-remote () {
  [[ -z "$user" ]] && die "User not specified"
  [[ -z "$repo" ]] && die "Repository not specified"
  git remote add origin $( _get-variable git.github.uri ):$user:$repo.git
+}
+
+_github-clone () {
+ require git
+ local url="git://github.com/${1}.git"
+ git clone $url
 }
 
 _git-enable-color () {
