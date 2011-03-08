@@ -21,9 +21,12 @@ _github-setup () {
 
 _github-remote () {
  require git
- echo "$1 $2 $3"
  [[ -d "$1" ]] && cd "$1" && shift
- echo git remote add origin $( _get-variable git.github.uri ):$1:$2.git
+ local user=$1
+ local repo=$2
+ [[ -z "$user" ]] && die "User not specified"
+ [[ -z "$repo" ]] && die "Repository not specified"
+ git remote add origin $( _get-variable git.github.uri ):$user:$repo.git
 }
 
 _git-enable-color () {
