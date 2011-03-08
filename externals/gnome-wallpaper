@@ -1,0 +1,14 @@
+# @
+# Get and set the gnome wallpaper
+
+# |gnome-wallpaper-set|<file>|set the wallpaper to file|
+function _gnome-wallpaper-set () {
+ local file="$1"
+ [[ -f $file ]] || die "$file is not a file"
+ gconftool-2 -t str --set /desktop/gnome/background/picture_filename "$1"
+}
+
+# |gnome-wallpaper-get||get the currently set wallpaper|
+function _gnome-wallpaper-get () {
+ gconftool-2 --get /desktop/gnome/background/picture_filename
+}
