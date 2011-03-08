@@ -3,12 +3,15 @@
 
 # |gnome-wallpaper-set|<file>|set the wallpaper to file|
 function _gnome-wallpaper-set () {
+ require gconftool-2
  local file="$1"
+ [[ -z "$file" ]] && die "filename not specified"
  [[ -f $file ]] || die "$file is not a file"
  gconftool-2 -t str --set /desktop/gnome/background/picture_filename "$1"
 }
 
 # |gnome-wallpaper-get||get the currently set wallpaper|
 function _gnome-wallpaper-get () {
+ require gconftool-2
  gconftool-2 --get /desktop/gnome/background/picture_filename
 }
