@@ -236,6 +236,7 @@ _external-append () {
 _external-add () {
  local origin name tmpfile offset
  origin=$1
+ [[ -f $origin ]] && origin=$( readlink -f $origin )
  name=$( basename $origin )
 
  echo $name
