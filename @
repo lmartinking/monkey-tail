@@ -367,7 +367,7 @@ require () {
 main () {
  require sed awk grep cut head tail readlink file
 
- SELF_REAL=$( readlink $SELF_LONG )
+ SELF_REAL=$( readlink -f $SELF_LONG )
  [[ -z "$SELF_REAL" ]] && SELF_REAL=$SELF_LONG
 
  if fn_exists _$(basename $0) ; then
