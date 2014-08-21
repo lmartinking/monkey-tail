@@ -20,9 +20,27 @@ You can hang @ on your belt, along with your shell, editor and your C compiler.
 How?
 ----
 
-Copy @ into your usual directory for scripts, etc
+Copy @ into your usual directory for scripts(make sure it is in your $PATH), etc
 
-Then, simply run:
+Test if @ can run:
+  $ @
+
+If everything is ok, you should see:
+  $ @
+  Usage: @ <subcommand>
+     or: @ list-commands
+     or: @ help-on <subcommand>
+
+Otherwise, if you see this:
+  $ @
+  bash: @: command not found
+
+You need to add your scripts directory to your $PATH (via your .bashrc or .bash_profile). Assuming it's $HOME/tools:
+  export PATH=$PATH:$HOME/tools:
+
+Now that everything is set, explore.
+
+Simply run:
 
 	@ list-commands
 
